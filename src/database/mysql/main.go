@@ -47,16 +47,37 @@ func main() {
 	fmt.Println("======================================================")
 	fmt.Println("")
 
-	ingri := Ingrediente{
-		Nome:       "Alho",
-		Quantidade: 99,
-		Descricao:  "",
+	// fmt.Println("INSERIR INSERIR INSERIR INSERIR INSERIR")
+	// ingri := Ingrediente{
+	// 	Nome:       "Alhos",
+	// 	Quantidade: 99,
+	// 	Descricao:  "",
+	// }
+	// if insertError := InserirIngrediente(ingri); insertError != nil {
+	// 	fmt.Println("Erro ao inserir o ingrediente:", insertError)
+	// 	os.Exit(1)
+	// }
+	// fmt.Println("")
+	fmt.Println("ATUALIZAR ATUALIZAR ATUALIZAR ATUALIZAR ATUALIZAR")
+	atualizaIngr := Ingrediente{
+		Id:   4,
+		Nome: "Alho",
 	}
-	if insertError := InserirIngrediente(ingri); insertError != nil {
-		fmt.Println("Erro ao inserir o ingrediente:", insertError)
-		os.Exit(1)
+	if atualizaErr := AtualizarIngrediente(atualizaIngr); atualizaErr != nil {
+		fmt.Println("Erro ao atualizar o ingrediente: ", atualizaErr)
 	}
-
+	fmt.Println("")
+	// fmt.Println("DELETAR DELETAR DELETAR DELETAR DELETAR")
+	// delIngrediente := Ingrediente{
+	// 	Id: 3,
+	// }
+	// errDelIngr := DeletarIngrediente(delIngrediente)
+	// if errDelIngr != nil {
+	// 	fmt.Println("Erro ao deletar ingrediente", errDelIngr)
+	// 	os.Exit(1)
+	// }
+	// fmt.Println("")
+	fmt.Println("BUSCAR BUSCAR BUSCAR BUSCAR BUSCAR")
 	allIngri, errAll := TodosIngredientes()
 	if errAll != nil {
 		fmt.Println("Erro ao buscar ingredientes:", errAll)
@@ -65,7 +86,7 @@ func main() {
 	jsonBytes, _ := json.MarshalIndent(allIngri, "", "  ")
 	fmt.Println(string(jsonBytes))
 	fmt.Println(allIngri)
-
+	fmt.Println("")
 }
 func TodosIngredientes() ([]*Ingrediente, error) {
 	res, err := db.Query("SELECT * FROM INGREDIENTE")
@@ -104,8 +125,21 @@ func InserirIngrediente(ingredientes Ingrediente) error {
 	fmt.Println("")
 	return nil
 }
-func AtualizarIngrediente() {
-
+func AtualizarIngrediente(ingredientes Ingrediente) error {
+	_, err := db.Exec(
+		"UPDATE INGREDIENTE SET Nome = ? WHERE id = ?",
+		ingredientes.Nome,
+		ingredientes.Id,
+	)
+	if err != nil {
+		return err
+	}
+	fmt.Println("")
+	fmt.Println("------------------------------------------------------")
+	fmt.Println("Ingrediente", ingredientes.Nome, "foi alterado com sucesso!")
+	fmt.Println("------------------------------------------------------")
+	fmt.Println("")
+	return nil
 }
 func DeletarIngrediente(ingredientes Ingrediente) error {
 	_, err := db.Exec(

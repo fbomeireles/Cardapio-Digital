@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"os"
 
@@ -39,15 +40,45 @@ func main() {
 	fmt.Println("======================================================")
 	fmt.Println("Conexão com o banco de dados estabelecida com sucesso.")
 	fmt.Println("======================================================")
+	fmt.Println("")
+	// ingri := Ingrediente{
+	// 	Nome:       "Cebola",
+	// 	Quantidade: 99,
+	// 	Descricao:  "",
+	// }
+	// if insertError := InserirIngrediente(ingri); insertError != nil {
+	// fmt.Println("Erro ao inserir o ingrediente:", insertError)
+	// os.Exit(1)
+	// }
 
-	ingri := Ingrediente{
-		Nome:       "Cebola",
-		Quantidade: 99,
-		Descricao:  "",
+	allIngri, errAll := TodosIngredientes()
+	if errAll != nil {
+		fmt.Println("Erro ao buscar ingredientes:", errAll)
+		os.Exit(1)
 	}
-	if insertError := InserirIngrediente(ingri); insertError != nil {
-		panic(insertError)
+	jsonBytes, _ := json.MarshalIndent(allIngri, "", "  ")
+	fmt.Println(string(jsonBytes))
+	fmt.Println(allIngri)
+
+}
+func TodosIngredientes() ([]*Ingrediente, error) {
+	res, err := db.Query("SELECT * FROM INGREDIENTE")
+
+	if err != nil {
+		return nil, err
 	}
+
+	ingredientes := []*Ingrediente{}
+
+	for res.Next() {
+		var ingri Ingrediente
+
+		if err := res.Scan(&ingri.Id, &ingri.Nome, &ingri.Quantidade, &ingri.Descricao); err != nil {
+			return nil, err
+		}
+		ingredientes = append(ingredientes, &ingri)
+	}
+	return ingredientes, nil
 }
 
 func InserirIngrediente(ingredientes Ingrediente) error {

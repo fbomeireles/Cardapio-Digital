@@ -50,15 +50,25 @@ func Menu() {
 			fmt.Println("Nome do Ingrediente: ")
 			nomeIngr, _ := reader.ReadString('\n')
 			nomeIngr = strings.TrimSpace(nomeIngr)
+			if len(nomeIngr) < 3 {
+				fmt.Println("Nome muito curto, favor inserir nome com mais de três caracteres")
+				continue
+			}
 
 			fmt.Println("Quantidade: ")
 			quantStr, _ := reader.ReadString('\n')
 			quantStr = strings.TrimSpace(quantStr)
 			qntdIngr, err := strconv.Atoi(quantStr)
+			q, err := strconv.Atoi(quantStr)
 			if err != nil {
 				fmt.Println("Quantidade inválida.")
 				continue
 			}
+			if q < 0 {
+				fmt.Println("Quantidade não pode ser menor que zero. Tente novamente.")
+				continue
+			}
+			qntdIngr = q
 
 			fmt.Println("Descrição: ")
 			descrIngr, _ := reader.ReadString('\n')
@@ -75,6 +85,8 @@ func Menu() {
 			} else {
 				fmt.Println("Ingrediente inserido com sucesso!")
 			}
+
+		case 3:
 		case 0:
 			fmt.Println("SAINDO...")
 			os.Exit(0)

@@ -10,6 +10,16 @@ type IngredienteRepository struct {
 	DB *sql.DB
 }
 
+func (repo *IngredienteRepository) IngredientePorId(id int) (*models.Ingrediente, error) {
+	var ingri models.Ingrediente
+	err := repo.DB.QueryRow("SELECT * FROM INGREDIENTE WHERE ID = ?", id).
+		Scan(&ingri.Id, &ingri.Nome, &ingri.Quantidade, &ingri.Descricao)
+	if err != nil {
+		return nil, err
+	}
+	return &ingri, nil
+}
+
 func (repo *IngredienteRepository) TodosIngredientes() ([]*models.Ingrediente, error) {
 	res, err := repo.DB.Query("SELECT * FROM INGREDIENTE")
 	if err != nil {

@@ -15,16 +15,6 @@ func main() {
 	// repo := repository.IngredienteRepository{DB: db}
 	cli.Menu()
 
-	// Atualizar exemplo
-	// fmt.Println("ATUALIZAR")
-	// atualizaIng := models.Ingrediente{
-	// 	Id:   4,
-	// 	Nome: "Alho Atualizado",
-	// }
-	// if err := repo.AtualizarIngrediente(atualizaIng); err != nil {
-	// 	fmt.Println("Erro ao atualizar:", err)
-	// }
-
 	// Deletar exemplo
 	// delIng := models.Ingrediente{
 	// 	Id: 3,

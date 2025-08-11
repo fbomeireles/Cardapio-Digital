@@ -26,6 +26,7 @@ func Menu() {
 		fmt.Println()
 		fmt.Println("1 - LISTAR TODOS OS INGREDIENTES")
 		fmt.Println("2 - INSERIR NOVO INGREDIENTE")
+		fmt.Println("3 - ATUALIZAR INGREDIENTE")
 		fmt.Println("0 - SAIR")
 		fmt.Print("Escolha uma opção: ")
 
@@ -87,6 +88,41 @@ func Menu() {
 			}
 
 		case 3:
+			var idIngrediente int
+			fmt.Println("Digite o Id do Ingrediente: ")
+			fmt.Scan(&idIngrediente)
+
+			idIngredienteIdentificado, err := repo.IngredientePorId(idIngrediente)
+			if err != nil {
+				fmt.Println("Ingrediente nao encontrado", err)
+			} else {
+				jsonBytes, _ := json.MarshalIndent(idIngredienteIdentificado, "", "  ")
+				fmt.Println(string(jsonBytes))
+			}
+			fmt.Println("Deseja atualizar o ingrediente ? (S / N)")
+			var desejaAtualizar string
+			fmt.Scan(&desejaAtualizar)
+			if desejaAtualizar == "s" || desejaAtualizar == "S" {
+				fmt.Println("Nome do Ingrediente: ")
+				atualizaIngr, _ := reader.ReadString('\n')
+				atualizaIngr = strings.TrimSpace(atualizaIngr)
+				if len(atualizaIngr) < 3 {
+					fmt.Println("Nome muito curto, favor inserir nome com mais de três caracteres")
+					continue
+				}
+
+				novoIng := models.Ingrediente{
+					Id:   idIngrediente,
+					Nome: atualizaIngr,
+				}
+				if err := repo.AtualizarIngrediente(novoIng); err != nil {
+					fmt.Println("Erro ao atualizar:", err)
+				}
+			} else {
+				fmt.Println("Voltando para o menu inicial...")
+				Menu()
+			}
+
 		case 0:
 			fmt.Println("SAINDO...")
 			os.Exit(0)

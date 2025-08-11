@@ -32,24 +32,30 @@ var db *sql.DB
 func main() {
 	var err error
 	db, err = sql.Open("mysql", "root:senhasecreta@tcp(127.0.0.1:3306)/restaurante")
-
 	if err != nil {
 		fmt.Println("Não foi possível estabelecer conexão com o banco de dados. Por favor, verifique as configurações e tente novamente.")
+		os.Exit(1)
+	}
+
+	err = db.Ping()
+	if err != nil {
+		fmt.Println("Não foi possível conectar ao banco de dados (ping).", err)
 		os.Exit(1)
 	}
 	fmt.Println("======================================================")
 	fmt.Println("Conexão com o banco de dados estabelecida com sucesso.")
 	fmt.Println("======================================================")
 	fmt.Println("")
-	// ingri := Ingrediente{
-	// 	Nome:       "Cebola",
-	// 	Quantidade: 99,
-	// 	Descricao:  "",
-	// }
-	// if insertError := InserirIngrediente(ingri); insertError != nil {
-	// fmt.Println("Erro ao inserir o ingrediente:", insertError)
-	// os.Exit(1)
-	// }
+
+	ingri := Ingrediente{
+		Nome:       "Alho",
+		Quantidade: 99,
+		Descricao:  "",
+	}
+	if insertError := InserirIngrediente(ingri); insertError != nil {
+		fmt.Println("Erro ao inserir o ingrediente:", insertError)
+		os.Exit(1)
+	}
 
 	allIngri, errAll := TodosIngredientes()
 	if errAll != nil {
@@ -94,6 +100,24 @@ func InserirIngrediente(ingredientes Ingrediente) error {
 	fmt.Println("")
 	fmt.Println("------------------------------------------------------")
 	fmt.Println("Ingrediente", ingredientes.Nome, "inserido com sucesso")
+	fmt.Println("------------------------------------------------------")
+	fmt.Println("")
+	return nil
+}
+func AtualizarIngrediente() {
+
+}
+func DeletarIngrediente(ingredientes Ingrediente) error {
+	_, err := db.Exec(
+		"DELETE FROM INGREDIENTE WHERE id = ?",
+		ingredientes.Id,
+	)
+	if err != nil {
+		return err
+	}
+	fmt.Println("")
+	fmt.Println("------------------------------------------------------")
+	fmt.Println("Ingrediente", ingredientes.Nome, "foi excluido")
 	fmt.Println("------------------------------------------------------")
 	fmt.Println("")
 	return nil

@@ -27,6 +27,7 @@ func Menu() {
 		fmt.Println("1 - LISTAR TODOS OS INGREDIENTES")
 		fmt.Println("2 - INSERIR NOVO INGREDIENTE")
 		fmt.Println("3 - ATUALIZAR INGREDIENTE")
+		fmt.Println("4 - DELETAR INGREDIENTE")
 		fmt.Println("0 - SAIR")
 		fmt.Print("Escolha uma opção: ")
 
@@ -121,6 +122,29 @@ func Menu() {
 			} else {
 				fmt.Println("Voltando para o menu inicial...")
 				Menu()
+			}
+		case 4:
+			var deletarIngr int
+			fmt.Println("Digite o Id do Ingrediente: ")
+			fmt.Scan(&deletarIngr)
+
+			idIngredienteIdentificado, err := repo.IngredientePorId(deletarIngr)
+			if err != nil {
+				fmt.Println("Ingrediente nao encontrado", err)
+			} else {
+				jsonBytes, _ := json.MarshalIndent(idIngredienteIdentificado, "", "  ")
+				fmt.Println(string(jsonBytes))
+			}
+			fmt.Println("Deseja deletar o Ingrediente desejado ? (S / N)")
+			var opcaoDeletar string
+			fmt.Scan(&opcaoDeletar)
+			if opcaoDeletar == "s" || opcaoDeletar == "S" {
+				delIng := models.Ingrediente{
+					Id: deletarIngr,
+				}
+				if err := repo.DeletarIngrediente(delIng); err != nil {
+					fmt.Println("Erro ao deletar:", err)
+				}
 			}
 
 		case 0:

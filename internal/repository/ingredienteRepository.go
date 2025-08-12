@@ -19,6 +19,15 @@ func (repo *IngredienteRepository) IngredientePorId(id int) (*models.Ingrediente
 	}
 	return &ingri, nil
 }
+func (repo *IngredienteRepository) IngredientePorNome(nome string) (*models.Ingrediente, error) {
+	var ingri models.Ingrediente
+	err := repo.DB.QueryRow("SELECT * FROM INGREDIENTE WHERE Nome = ?", nome).
+		Scan(&ingri.Id, &ingri.Nome, &ingri.Quantidade, &ingri.Descricao)
+	if err != nil {
+		return nil, err
+	}
+	return &ingri, nil
+}
 
 func (repo *IngredienteRepository) TodosIngredientes() ([]*models.Ingrediente, error) {
 	res, err := repo.DB.Query("SELECT * FROM INGREDIENTE")

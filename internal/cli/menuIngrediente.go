@@ -1,7 +1,6 @@
 package cli
 
 import (
-	"Cardapio-Digital/internal/database"
 	"Cardapio-Digital/internal/models"
 	"Cardapio-Digital/internal/repository"
 	"bufio"
@@ -12,14 +11,8 @@ import (
 	"strings"
 )
 
-func Menu() {
-	dsn := "root:senhasecreta@tcp(127.0.0.1:3306)/restaurante"
-	db, err := database.NewMySQLDB(dsn)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	repo := repository.IngredienteRepository{DB: db}
+func MenuIngrediente(repo repository.IngredienteRepository) {
+
 	reader := bufio.NewReader(os.Stdin)
 	for {
 		fmt.Println("INGREDIENTES")
@@ -29,6 +22,7 @@ func Menu() {
 		fmt.Println("3 - ATUALIZAR INGREDIENTE")
 		fmt.Println("4 - DELETAR INGREDIENTE")
 		fmt.Println("0 - SAIR")
+		fmt.Println()
 		fmt.Print("Escolha uma opção: ")
 
 		opcaoStr, _ := reader.ReadString('\n')
@@ -84,10 +78,7 @@ func Menu() {
 
 			if err := repo.InserirIngrediente(novoIng); err != nil {
 				fmt.Println("Erro ao inserir:", err)
-			} else {
-				fmt.Println("Ingrediente inserido com sucesso!")
 			}
-
 		case 3:
 			var idIngrediente int
 			fmt.Println("Digite o Id do Ingrediente: ")
@@ -121,7 +112,7 @@ func Menu() {
 				}
 			} else {
 				fmt.Println("Voltando para o menu inicial...")
-				Menu()
+				MenuIngrediente(repo)
 			}
 		case 4:
 			var deletarIngr int
@@ -146,11 +137,9 @@ func Menu() {
 					fmt.Println("Erro ao deletar:", err)
 				}
 			}
-
 		case 0:
 			fmt.Println("SAINDO...")
 			os.Exit(0)
 		}
-
 	}
 }

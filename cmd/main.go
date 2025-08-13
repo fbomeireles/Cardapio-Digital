@@ -17,13 +17,13 @@ func main() {
 		fmt.Println("Não foi possível conectar ao banco")
 		os.Exit(1)
 	}
-	repo := &repository.IngredienteRepository{DB: db}
+	repoIngr := &repository.IngredienteRepository{DB: db}
 
-	// http.HandleFunc("/ingredientes", handlers.CriarIngrediente(repo))
-	// http.HandleFunc("/ingredientes/", handlers.EditarIngrediente(repo))
-	// http.HandleFunc("/ingredientes/", handlers.InativarIngrediente(repo))
-	http.HandleFunc("/ingredientes/todos", handlers.BuscarTodosOsIngredientes(repo))
-	http.HandleFunc("/ingredientes/", handlers.BuscarIngredientePorId(repo))
+	http.HandleFunc("/ingredientes/criar", handlers.CriarIngrediente(repoIngr))
+	http.HandleFunc("/ingredientes/editar", handlers.EditarIngrediente(repoIngr))
+	http.HandleFunc("/ingredientes/inativar/", handlers.InativarIngrediente(repoIngr))
+	http.HandleFunc("/ingredientes/todos", handlers.BuscarTodosOsIngredientes(repoIngr))
+	http.HandleFunc("/ingredientes/", handlers.BuscarIngredientePorId(repoIngr))
 
 	fmt.Println("Servidor rodando em http://localhost:8080/")
 	http.ListenAndServe(":8080", nil)

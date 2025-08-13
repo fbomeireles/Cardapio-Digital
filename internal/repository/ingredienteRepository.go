@@ -65,8 +65,10 @@ func (repo *IngredienteRepository) InserirIngrediente(ingri models.Ingrediente) 
 
 func (repo *IngredienteRepository) AtualizarIngrediente(ingri models.Ingrediente) error {
 	_, err := repo.DB.Exec(
-		"UPDATE INGREDIENTE SET Nome = ? WHERE id = ?",
+		"UPDATE INGREDIENTE SET Nome = ?, Quantidade = ?, Descricao = ? WHERE id = ?",
 		ingri.Nome,
+		ingri.Quantidade,
+		ingri.Descricao,
 		ingri.Id,
 	)
 	if err != nil {

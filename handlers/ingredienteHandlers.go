@@ -4,6 +4,7 @@ import (
 	"Cardapio-Digital/internal/models"
 	"Cardapio-Digital/internal/repository"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 )
@@ -46,12 +47,14 @@ func EditarIngrediente(repo *repository.IngredienteRepository) http.HandlerFunc 
 		}
 		_, err := repo.IngredientePorId(ingr.Id)
 		if err != nil {
+			fmt.Printf("Falha na busca do id %d: %v\n", ingr.Id, err)
 			http.Error(w, "Ingrediente não existe!", http.StatusNotFound)
 			return
 		}
 		ingrExistente, err := repo.IngredientePorNome(ingr.Nome)
 		if err == nil && ingrExistente.Id != ingr.Id {
 			http.Error(w, "Ingrediente já existe.", http.StatusConflict)
+			return
 		}
 		if err := repo.AtualizarIngrediente(ingr); err != nil {
 			http.Error(w, "Erro ao atualizar", http.StatusInternalServerError)

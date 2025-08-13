@@ -19,7 +19,11 @@ func main() {
 	}
 	repo := &repository.IngredienteRepository{DB: db}
 
-	http.HandleFunc("/ingredientes", handlers.CriarIngredienteHandler(repo))
+	// http.HandleFunc("/ingredientes", handlers.CriarIngrediente(repo))
+	// http.HandleFunc("/ingredientes/", handlers.EditarIngrediente(repo))
+	// http.HandleFunc("/ingredientes/", handlers.InativarIngrediente(repo))
+	http.HandleFunc("/ingredientes/todos", handlers.BuscarTodosOsIngredientes(repo))
+	http.HandleFunc("/ingredientes/", handlers.BuscarIngredientePorId(repo))
 
 	fmt.Println("Servidor rodando em http://localhost:8080/")
 	http.ListenAndServe(":8080", nil)

@@ -1,8 +1,8 @@
 package models
 
 type Prato struct {
-	Id        int
-	Nome      string
-	Descricao string
-	URL_Foto  string
+	Id        int    `json:"Id"`
+	Nome      string `json:"Nome"`
+	Descricao string `json:"Descricao"`
+	URL_Foto  string `json:"URL_Foto"`
 }

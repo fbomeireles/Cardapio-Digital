@@ -10,7 +10,6 @@ import (
 )
 
 func main() {
-
 	dsn := "root:senhasecreta@tcp(127.0.0.1:3306)/restaurante"
 	db, err := database.NewMySQLDB(dsn)
 	if err != nil {
@@ -29,5 +28,4 @@ func main() {
 	http.ListenAndServe(":8080", nil)
 
 	// cli.Menu()
-
 }

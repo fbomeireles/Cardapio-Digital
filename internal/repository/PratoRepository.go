@@ -19,6 +19,15 @@ func (repo *PratoRepository) PratoPorId(id int) (*models.Prato, error) {
 	}
 	return &prato, nil
 }
+func (repo *PratoRepository) PratoPorNome(nome string) (*models.Prato, error) {
+	var prato models.Prato
+	err := repo.DB.QueryRow("SELECT * FROM PRATO WHERE Nome = ?", nome).
+		Scan(&prato.Id, &prato.Nome, &prato.Descricao, &prato.URL_Foto)
+	if err != nil {
+		return nil, err
+	}
+	return &prato, nil
+}
 func (repo *PratoRepository) TodosOsPratos() ([]*models.Prato, error) {
 	res, err := repo.DB.Query("SELECT * FROM PRATO")
 	if err != nil {
@@ -37,7 +46,8 @@ func (repo *PratoRepository) TodosOsPratos() ([]*models.Prato, error) {
 	return pratos, nil
 }
 func (repo *PratoRepository) InserirPrato(prato models.Prato) error {
-	_, err := repo.DB.Exec("INSERT INTO PRATO (Nome, Descricao, URL_Foto) VALUES ? ? ?",
+	_, err := repo.DB.Exec(
+		"INSERT INTO PRATO (Nome, Descricao, URL_Foto) VALUES (?, ?, ?)",
 		prato.Nome,
 		prato.Descricao,
 		prato.URL_Foto,
@@ -51,9 +61,11 @@ func (repo *PratoRepository) InserirPrato(prato models.Prato) error {
 	return nil
 }
 func (repo *PratoRepository) AtualizarPrato(prato models.Prato) error {
-	_, err := repo.DB.Exec("UPDATE PRATO SET Nome = ? WHERE Id = ?",
+	_, err := repo.DB.Exec("UPDATE PRATO SET Nome = ?, SET Descricao = ?, SET URL_Foto = ? WHERE Id = ?",
 		prato.Id,
 		prato.Nome,
+		prato.Descricao,
+		prato.URL_Foto,
 	)
 	if err != nil {
 		return err

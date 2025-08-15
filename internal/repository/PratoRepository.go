@@ -60,18 +60,35 @@ func (repo *PratoRepository) InserirPrato(prato models.Prato) error {
 	fmt.Println("------------------------------------------------------")
 	return nil
 }
-func (repo *PratoRepository) AtualizarPrato(prato models.Prato) error {
-	_, err := repo.DB.Exec("UPDATE PRATO SET Nome = ?, SET Descricao = ?, SET URL_Foto = ? WHERE Id = ?",
-		prato.Id,
+func (repo *PratoRepository) AtualizarPrato(prato models.Prato, ingredientes []models.Prato_Ingrediente) error {
+	_, err := repo.DB.Exec(
+		"UPDATE PRATO SET Nome = ?, Descricao = ?, URL_Foto = ? WHERE Id = ?",
 		prato.Nome,
 		prato.Descricao,
 		prato.URL_Foto,
+		prato.Id,
 	)
 	if err != nil {
 		return err
 	}
+
+	_, err = repo.DB.Exec("DELETE FROM PRATO_INGREDIENTE WHERE Id_Prato = ?", prato.Id)
+	if err != nil {
+		return err
+	}
+
+	for _, ing := range ingredientes {
+		_, err = repo.DB.Exec(
+			"INSERT INTO PRATO_INGREDIENTE (Id_Prato, Id_Ingrediente, Quantidade) VALUES (?, ?, ?)",
+			prato.Id, ing.Id_Ingrediente, ing.Quantidade,
+		)
+		if err != nil {
+			return err
+		}
+	}
+
 	fmt.Println("------------------------------------------------------")
-	fmt.Printf("Prato %s foi alterado com sucesso!\n", prato.Nome)
+	fmt.Printf("Prato %s e seus ingredientes foram alterados com sucesso!\n", prato.Nome)
 	fmt.Println("------------------------------------------------------")
 	return nil
 }

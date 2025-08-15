@@ -67,41 +67,51 @@ func MenuPrato(repo repository.PratoRepository) {
 			if err := repo.InserirPrato(novoPrato); err != nil {
 				fmt.Println("Erro ao inserir:", err)
 			}
-		case 3:
-			var idPrato int
-			fmt.Println("Digite o Id do Prato: ")
-			fmt.Scan(&idPrato)
 
-			idIPratoIdentificado, err := repo.PratoPorId(idPrato)
-			if err != nil {
-				fmt.Println("Prato nao encontrado", err)
-			} else {
-				jsonBytes, _ := json.MarshalIndent(idIPratoIdentificado, "", "  ")
-				fmt.Println(string(jsonBytes))
-			}
-			fmt.Println("Deseja atualizar o Prato ? (S / N)")
-			var desejaAtualizar string
-			fmt.Scan(&desejaAtualizar)
-			if desejaAtualizar == "s" || desejaAtualizar == "S" {
-				fmt.Println("Nome do Prato: ")
-				atualizaPrato, _ := reader.ReadString('\n')
-				atualizaPrato = strings.TrimSpace(atualizaPrato)
-				if len(atualizaPrato) < 3 {
-					fmt.Println("Nome muito curto, favor inserir nome com mais de três caracteres")
-					continue
-				}
+			// case 3:
+			// var idPrato int
+			// fmt.Println("Digite o Id do Prato: ")
+			// fmt.Scan(&idPrato)
 
-				novoPrato := models.Prato{
-					Id:   idPrato,
-					Nome: atualizaPrato,
-				}
-				if err := repo.AtualizarPrato(novoPrato); err != nil {
-					fmt.Println("Erro ao atualizar:", err)
-				}
-			} else {
-				fmt.Println("Voltando para o menu inicial...")
-				MenuPrato(repo)
-			}
+			// idIPratoIdentificado, err := repo.PratoPorId(idPrato)
+			// if err != nil {
+			// 	fmt.Println("Prato nao encontrado", err)
+			// } else {
+			// 	jsonBytes, _ := json.MarshalIndent(idIPratoIdentificado, "", "  ")
+			// 	fmt.Println(string(jsonBytes))
+			// }
+			// fmt.Println("Deseja atualizar o Prato ? (S / N)")
+			// var desejaAtualizar string
+			// fmt.Scan(&desejaAtualizar)
+			// if desejaAtualizar == "s" || desejaAtualizar == "S" {
+			// 	fmt.Println("Nome do Prato: ")
+			// 	atualizaPrato, _ := reader.ReadString('\n')
+			// 	atualizaPrato = strings.TrimSpace(atualizaPrato)
+			// 	if len(atualizaPrato) < 3 {
+			// 		fmt.Println("Nome muito curto, favor inserir nome com mais de três caracteres")
+			// 		continue
+			// 	}
+			// 	nomeIngrediente := "teste"
+			// 	quantidadeIngrediente := 99
+			// 	descricaoIngrediente := ""
+
+			// 	novoIngrediente := models.Ingrediente{
+
+			// 		Nome:       nomeIngrediente,
+			// 		Quantidade: quantidadeIngrediente,
+			// 		Descricao:  descricaoIngrediente,
+			// 	}
+			// 	novoPrato := models.Prato{
+			// 		Id:   idPrato,
+			// 		Nome: atualizaPrato,
+			// 	}
+			// 	if err := repo.AtualizarPrato(novoPrato, novoIngrediente); err != nil {
+			// 		fmt.Println("Erro ao atualizar:", err)
+			// 	}
+			// } else {
+			// 	fmt.Println("Voltando para o menu inicial...")
+			// 	MenuPrato(repo)
+			// }
 		case 4:
 			var deletarPrato int
 			fmt.Println("Digite o Id do Ingrediente: ")

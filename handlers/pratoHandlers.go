@@ -5,6 +5,7 @@ import (
 	"Cardapio-Digital/internal/repository"
 	"encoding/json"
 	"net/http"
+	"strconv"
 )
 
 type IngredienteSolicit struct {
@@ -45,7 +46,7 @@ func CriarPrato(repo *repository.PratoRepository) http.HandlerFunc {
 			}
 		}
 
-		foto := "https://metanikk.com.br"
+		foto := "https://restauranteTopzera.com/"
 		if req.UrlFoto != nil && *req.UrlFoto != "" {
 			foto = *req.UrlFoto
 		}
@@ -106,7 +107,7 @@ func EditarPrato(repo *repository.PratoRepository) http.HandlerFunc {
 				return
 			}
 		}
-		foto := "https://metanikk.com.br"
+		foto := "https://restauranteTopzera.com/"
 		if req.UrlFoto != nil && *req.UrlFoto != "" {
 			foto = *req.UrlFoto
 		}
@@ -124,6 +125,7 @@ func EditarPrato(repo *repository.PratoRepository) http.HandlerFunc {
 		}
 
 		prato := models.Prato{
+			Id:        req.Id,
 			Nome:      req.Nome,
 			Descricao: "",
 			URL_Foto:  foto,
@@ -149,5 +151,32 @@ func EditarPrato(repo *repository.PratoRepository) http.HandlerFunc {
 
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("Prato editado com sucesso!"))
+	}
+}
+func InativarPrato(repo *repository.PratoRepository) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+	}
+}
+func BuscarPratoPorId(repo *repository.PratoRepository) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		url := r.URL.Path
+		idString := url[len("/pratos/"):]
+
+		id, err := strconv.Atoi(idString)
+		if err != nil {
+			http.Error(w, "Id inválido", http.StatusBadRequest)
+		}
+
+		ingr, err := repo.PratoPorId(id)
+		if err != nil {
+			http.Error(w, "Prato não existe na base de dados", http.StatusNotFound)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(ingr)
 	}
 }

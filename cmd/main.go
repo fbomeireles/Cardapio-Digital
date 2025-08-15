@@ -17,12 +17,16 @@ func main() {
 		os.Exit(1)
 	}
 	repoIngr := &repository.IngredienteRepository{DB: db}
-
+	repoPrato := &repository.PratoRepository{DB: db}
 	http.HandleFunc("/ingredientes/criar", handlers.CriarIngrediente(repoIngr))
 	http.HandleFunc("/ingredientes/editar", handlers.EditarIngrediente(repoIngr))
 	http.HandleFunc("/ingredientes/inativar/", handlers.InativarIngrediente(repoIngr))
 	http.HandleFunc("/ingredientes/todos", handlers.BuscarTodosOsIngredientes(repoIngr))
 	http.HandleFunc("/ingredientes/", handlers.BuscarIngredientePorId(repoIngr))
+
+	http.HandleFunc("/pratos/criar", handlers.CriarPrato(repoPrato))
+	http.HandleFunc("/pratos/editar", handlers.EditarPrato(repoPrato))
+	http.HandleFunc("/pratos/", handlers.BuscarPratoPorId(repoPrato))
 
 	fmt.Println("Servidor rodando em http://localhost:8080/")
 	http.ListenAndServe(":8080", nil)
